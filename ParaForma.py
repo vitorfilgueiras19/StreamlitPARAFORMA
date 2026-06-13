@@ -99,6 +99,87 @@ with aba1:
         csv = df_filtrado.to_csv(index=False).encode('utf-8')
         st.download_button(label="📥 Baixar Dados Filtrados (CSV)", data=csv, file_name='dados_filtrados.csv', mime='text/csv')
 
+
+
+# === ABA 2: PERGUNTAS 1 A 5 ===
+with aba2:
+    if df_filtrado.empty:
+        st.warning("Selecione os filtros na barra lateral para gerar os gráficos.")
+    else:
+        # Pergunta 1
+        st.subheader("1. Cidade com maior valor de venda em 'Office Supplies'")
+        df_escritorio = df_filtrado[df_filtrado['Category'] == 'Office Supplies']
+        if not df_escritorio.empty:
+            cidade_campea = df_escritorio.groupby('City')['Sales'].sum().idxmax()
+            valor_campeao = df_escritorio.groupby('City')['Sales'].sum().max()
+            st.markdown(f"**Resultado:** {cidade_campea} (Total: ${valor_campeao:,.2f})")
+            st.markdown("*Análise:* A concentração de vendas nesta cidade sugere maior densidade de clientes corporativos ou hubs comerciais.")
+        else:
+            st.write("Sem registros para esta categoria com os filtros atuais.")
+        
+        st.divider()
+
+        # Pergunta 2
+        st.subheader("2. Total de vendas por data do pedido")
+        vendas_diarias = df_filtrado.groupby(df_filtrado['Order Date'].dt.date)['Sales'].sum()
+        fig2, ax2 = plt.subplots(figsize=(10, 4))
+        ax2.plot(vendas_diarias.index, vendas_diarias.values, color='cyan')
+        ax2.set_title("Evolução Diária de Vendas")
+        fig2.tight_layout()
+        st.pyplot(fig2)
+        st.markdown("*Análise:* O comportamento gráfico apresenta picos sazonais nítidos, característicos de compras volumosas em períodos específicos.")
+
+        st.divider()
+
+        # Pergunta 3
+        st.subheader("3. Total de vendas por estado")
+        vendas_por_estado = df_filtrado.groupby('State')['Sales'].sum().sort_values(ascending=False)
+        fig3, ax3 = plt.subplots(figsize=(12, 5))
+        vendas_por_estado.plot(kind='bar', ax=ax3, color='gold')
+        plt.xticks(rotation=45, ha='right')
+        fig3.tight_layout()
+        st.pyplot(fig3)
+        st.markdown("*Análise:* Distribuição desigual de receita entre os estados, evidenciando mercados consolidados versus regiões com potencial de expansão.")
+
+        st.divider()
+
+        # Pergunta 4
+        st.subheader("4. Top 10 cidades em volume de vendas")
+        top_cidades = df_filtrado.groupby('City')['Sales'].sum().nlargest(10)
+        fig4, ax4 = plt.subplots(figsize=(10, 5))
+        top_cidades.plot(kind='bar', ax=ax4, color='lightgreen')
+        plt.xticks(rotation=45, ha='right')
+        fig4.tight_layout()
+        st.pyplot(fig4)
+        st.markdown("*Análise:* As dez principais cidades concentram uma parcela significativa do faturamento total da empresa.")
+
+        st.divider()
+
+        # Pergunta 5
+        st.subheader("5. Representatividade de vendas por segmento")
+        vendas_segmentos = df_filtrado.groupby('Segment')['Sales'].sum()
+        fig5, ax5 = plt.subplots(figsize=(6, 6))
+        ax5.pie(vendas_segmentos, labels=vendas_segmentos.index, autopct='%1.1f%%', startangle=90, colors=['#ff9999','#66b3ff','#99ff99'])
+        fig5.tight_layout()
+        st.pyplot(fig5)
+        st.markdown("*Análise:* Identificação do perfil de consumo predominante na base de dados atual, auxiliando o direcionamento estratégico.")
+        
+# === ABA 3: PERGUNTAS 6 A 10 ===
+with aba3:
+    if df_filtrado.empty:
+        st.warning("Nenhum dado encontrado para a combinação de filtros selecionada.")
+    else:
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total de Vendas", f"${df_filtrado['Sales'].sum():,.2f}")
+        c2.metric("Total de Pedidos", len(df_filtrado))
+        c3.metric("Cidades Atendidas", df_filtrado['City'].nunique())
+        
+        st.dataframe(df_filtrado.head(10), use_container_width=True)
+        
+        # Exportação dos dados filtrados
+        csv = df_filtrado.to_csv(index=False).encode('utf-8')
+        st.download_button(label="📥 Baixar Dados Filtrados (CSV)", data=csv, file_name='dados_filtrados.csv', mime='text/csv')
+
         # === ABA 3: PERGUNTAS 6 A 10 ===
 with aba3:
     if df_filtrado.empty:
