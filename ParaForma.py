@@ -20,3 +20,33 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# Configuração global do Matplotlib para seguir o tema do app
+plt.rcParams.update({
+    'figure.facecolor': '#0A192F',
+    'axes.facecolor': '#0A192F',
+    'text.color': '#FFD700',
+    'axes.labelcolor': '#FFD700',
+    'axes.edgecolor': '#FFD700',
+    'xtick.color': '#FFD700',
+    'ytick.color': '#FFD700'
+})
+
+@st.cache_data
+def carregar_dados():
+    df = pd.read_excel("Sample - Superstore.xls")
+    
+    # Tratamento de tipos e valores ausentes
+    df['Order Date'] = pd.to_datetime(df['Order Date'])
+    df['Sales'] = pd.to_numeric(df['Sales'], errors='coerce').fillna(0)
+    df['City'] = df['City'].fillna("Não Informado")
+    df['State'] = df['State'].fillna("Não Informado")
+    
+    # Colunas auxiliares para agrupamento temporal
+    df['Year'] = df['Order Date'].dt.year
+    df['Month'] = df['Order Date'].dt.month
+    df['Ano-Mes'] = df['Order Date'].dt.to_period('M').dt.to_timestamp()
+    
+    return df
+
+df = carregar_dados()
