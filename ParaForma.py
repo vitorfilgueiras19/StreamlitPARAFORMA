@@ -225,3 +225,19 @@ with aba3:
         st.pyplot(fig10)
         st.markdown("*Análise:* Detalhamento do mix de produtos mais relevantes, indicando quais subcategorias sustentam as categorias macro.")
         
+# === ABA 4: CONCLUSÕES E LIMITAÇÕES ===
+with aba4:
+    st.header("Conclusões Finais")
+    st.markdown("""
+    * **Concentração de Mercado:** O faturamento depende massivamente de polos urbanos e estados específicos. Estratégias de expansão logística devem focar prioritariamente nessas regiões estáveis.
+    * **Elasticidade e Margem:** Conforme demonstrado no simulador, políticas agressivas de desconto reduzem sensivelmente o ticket médio, exigindo validação de volume compensatório antes da implementação.
+    """)
+    
+    st.divider()
+    
+    st.subheader("Limitações da Base de Dados e Tratamento de Erros")
+    st.markdown("""
+    1. **Dados Incompletos ou Nulos:** Registros ausentes em colunas críticas (como Cidades ou Estados) foram preenchidos preventivamente com termos genéricos usando estruturas do Pandas para evitar falhas de compilação ou omissão em somatórios.
+    2. **Inconsistência de Tipos:** Colunas de texto interpretadas incorretamente como valores numéricos (ou vice-versa) foram convertidas via tipagem explícita (`pd.to_numeric` e `pd.to_datetime`), tratando exceções de parsing de strings de forma isolada.
+    3. **Armazenamento de Dados:** Esta versão executa consultas em arquivo estruturado local para desenvolvimento da interface. A integração definitiva exigirá a migração para chamadas via API de banco de dados na nuvem com variáveis de ambiente protegidas em arquivo oculto.
+    """)
