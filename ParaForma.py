@@ -80,21 +80,3 @@ aba1, aba2, aba3, aba4 = st.tabs([
     "🚀 Perguntas 6-10", 
     "💡 Conclusões"
 ])
-
-# === ABA 1: VISÃO GERAL ===
-with aba1:
-    st.header("Visão Geral da Base de Dados")
-    
-    if df_filtrado.empty:
-        st.warning("Nenhum dado encontrado para a combinação de filtros selecionada.")
-    else:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Total de Vendas", f"${df_filtrado['Sales'].sum():,.2f}")
-        c2.metric("Total de Pedidos", len(df_filtrado))
-        c3.metric("Cidades Atendidas", df_filtrado['City'].nunique())
-        
-        st.dataframe(df_filtrado.head(10), use_container_width=True)
-        
-        # Exportação dos dados filtrados
-        csv = df_filtrado.to_csv(index=False).encode('utf-8')
-        st.download_button(label="📥 Baixar Dados Filtrados (CSV)", data=csv, file_name='dados_filtrados.csv', mime='text/csv')
