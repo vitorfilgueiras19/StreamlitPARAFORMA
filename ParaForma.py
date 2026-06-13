@@ -81,6 +81,32 @@ aba1, aba2, aba3, aba4 = st.tabs([
     "💡 Conclusões"
 ])
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # === ABA 2: PERGUNTAS 1 A 5 ===
 with aba2:
     if df_filtrado.empty:
