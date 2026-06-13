@@ -167,22 +167,6 @@ with aba2:
 # === ABA 3: PERGUNTAS 6 A 10 ===
 with aba3:
     if df_filtrado.empty:
-        st.warning("Nenhum dado encontrado para a combinação de filtros selecionada.")
-    else:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Total de Vendas", f"${df_filtrado['Sales'].sum():,.2f}")
-        c2.metric("Total de Pedidos", len(df_filtrado))
-        c3.metric("Cidades Atendidas", df_filtrado['City'].nunique())
-        
-        st.dataframe(df_filtrado.head(10), use_container_width=True)
-        
-        # Exportação dos dados filtrados
-        csv = df_filtrado.to_csv(index=False).encode('utf-8')
-        st.download_button(label="📥 Baixar Dados Filtrados (CSV)", data=csv, file_name='dados_filtrados.csv', mime='text/csv')
-
-        # === ABA 3: PERGUNTAS 6 A 10 ===
-with aba3:
-    if df_filtrado.empty:
         st.warning("Selecione os filtros na barra lateral para gerar os gráficos.")
     else:
         # Pergunta 6
@@ -193,7 +177,7 @@ with aba3:
         plt.xticks(rotation=0)
         fig6.tight_layout()
         st.pyplot(fig6)
-        st.markdown("Análise: Permite monitorar o crescimento ou retração histórica de cada segmento de mercado.")
+        st.markdown("*Análise:* Permite monitorar o crescimento ou retração histórica de cada segmento de mercado.")
 
         st.divider()
 
@@ -210,10 +194,10 @@ with aba3:
         
         qtd_vendas_desc_alto = len(df_sim[df_sim['Desconto_Aplicado'] == desc_alto])
         
-        st.write(f"*Pedidos afetados pelo desconto maior:* {qtd_vendas_desc_alto}")
-        st.write(f"*Ticket médio original:* ${df_sim['Sales'].mean():,.2f}")
-        st.write(f"*Ticket médio projetado:* ${df_sim['Sales_Com_Desconto'].mean():,.2f}")
-        st.markdown("Análise: A simulação quantifica o impacto direto na receita bruta caso regras de precificação promocional flexíveis sejam adotadas.")
+        st.write(f"**Pedidos afetados pelo desconto maior:** {qtd_vendas_desc_alto}")
+        st.write(f"**Ticket médio original:** ${df_sim['Sales'].mean():,.2f}")
+        st.write(f"**Ticket médio projetado:** ${df_sim['Sales_Com_Desconto'].mean():,.2f}")
+        st.markdown("*Análise:* A simulação quantifica o impacto direto na receita bruta caso regras de precificação promocional flexíveis sejam adotadas.")
 
         st.divider()
 
@@ -224,7 +208,7 @@ with aba3:
         media_mensal.plot(kind='line', ax=ax9, marker='o', alpha=0.7)
         fig9.tight_layout()
         st.pyplot(fig9)
-        st.markdown("Análise: Análise do comportamento do ticket médio por período, útil para detecção de variações e sazonalidade de curto prazo.")
+        st.markdown("*Análise:* Análise do comportamento do ticket médio por período, útil para detecção de variações e sazonalidade de curto prazo.")
 
         st.divider()
 
@@ -239,4 +223,5 @@ with aba3:
         plt.xticks(rotation=45, ha='right')
         fig10.tight_layout()
         st.pyplot(fig10)
-        st.markdown("Análise: Detalhamento do mix de produtos mais relevantes, indicando quais subcategorias sustentam as categorias macro.")
+        st.markdown("*Análise:* Detalhamento do mix de produtos mais relevantes, indicando quais subcategorias sustentam as categorias macro.")
+        
