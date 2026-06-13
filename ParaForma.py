@@ -225,3 +225,5 @@ with aba3:
         st.pyplot(fig10)
         st.markdown("*Análise:* Detalhamento do mix de produtos mais relevantes, indicando quais subcategorias sustentam as categorias macro.")
         
+
+
