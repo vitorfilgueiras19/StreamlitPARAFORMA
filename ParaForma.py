@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Configuração da página
-st.set_page_config(page_title="Streamlit-Indios📊", layout="wide", page_icon="🚀")
+st.set_page_config(page_title="Stream-Paraforma📊", layout="wide", page_icon="🚀")
 
 # Customização do tema (Fundo azul escuro e texto amarelo)
 st.markdown(
@@ -71,7 +71,7 @@ else:
     df_filtrado = df_filtrado[df_filtrado['State'].isin(regiao_escolhida)]
 
 # Interface principal
-st.title("Streamlit-Indios 📊")
+st.title("Stream-Paraforma 📊")
 st.markdown("Dashboard operacional de análise de vendas.")
 
 aba1, aba2, aba3, aba4 = st.tabs([
