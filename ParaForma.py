@@ -151,60 +151,15 @@ with aba2:
 # === ABA 3: PERGUNTAS 6 A 10 ===
 with aba3:
     if df_filtrado.empty:
-        st.warning("Selecione os filtros na barra lateral para gerar os gráficos.")
+        st.warning("Nenhum dado encontrado para a combinação de filtros selecionada.")
     else:
-        # Pergunta 6
-        st.subheader("6. Distribuição anual de vendas por segmento")
-        vendas_ano_seg = df_filtrado.groupby(['Year', 'Segment'])['Sales'].sum().unstack()
-        fig6, ax6 = plt.subplots(figsize=(10, 5))
-        vendas_ano_seg.plot(kind='bar', ax=ax6)
-        plt.xticks(rotation=0)
-        fig6.tight_layout()
-        st.pyplot(fig6)
-        st.markdown("Análise: Permite monitorar o crescimento ou retração histórica de cada segmento de mercado.")
-
-        st.divider()
-
-        # Perguntas 7 e 8
-        st.subheader("7 & 8. Simulação de Margem com Políticas de Desconto")
-        c_sim1, c_sim2, c_sim3 = st.columns(3)
-        limite = c_sim1.number_input("Gatilho do pedido ($)", value=1000)
-        desc_alto = c_sim2.slider("Desconto para pedidos acima do gatilho (%)", 0, 50, 15) / 100
-        desc_baixo = c_sim3.slider("Desconto padrão (%)", 0, 50, 10) / 100
-
-        df_sim = df_filtrado.copy()
-        df_sim['Desconto_Aplicado'] = df_sim['Sales'].apply(lambda x: desc_alto if x > limite else desc_baixo)
-        df_sim['Sales_Com_Desconto'] = df_sim['Sales'] * (1 - df_sim['Desconto_Aplicado'])
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total de Vendas", f"${df_filtrado['Sales'].sum():,.2f}")
+        c2.metric("Total de Pedidos", len(df_filtrado))
+        c3.metric("Cidades Atendidas", df_filtrado['City'].nunique())
         
-        qtd_vendas_desc_alto = len(df_sim[df_sim['Desconto_Aplicado'] == desc_alto])
+        st.dataframe(df_filtrado.head(10), use_container_width=True)
         
-        st.write(f"*Pedidos afetados pelo desconto maior:* {qtd_vendas_desc_alto}")
-        st.write(f"*Ticket médio original:* ${df_sim['Sales'].mean():,.2f}")
-        st.write(f"*Ticket médio projetado:* ${df_sim['Sales_Com_Desconto'].mean():,.2f}")
-        st.markdown("Análise: A simulação quantifica o impacto direto na receita bruta caso regras de precificação promocional flexíveis sejam adotadas.")
-
-        st.divider()
-
-        # Pergunta 9
-        st.subheader("9. Média mensal de vendas por segmento")
-        media_mensal = df_filtrado.groupby(['Ano-Mes', 'Segment'])['Sales'].mean().unstack()
-        fig9, ax9 = plt.subplots(figsize=(10, 5))
-        media_mensal.plot(kind='line', ax=ax9, marker='o', alpha=0.7)
-        fig9.tight_layout()
-        st.pyplot(fig9)
-        st.markdown("Análise: Análise do comportamento do ticket médio por período, útil para detecção de variações e sazonalidade de curto prazo.")
-
-        st.divider()
-
-        # Pergunta 10
-        st.subheader("10. Faturamento das 12 principais subcategorias por categoria")
-        top12 = df_filtrado.groupby('Sub-Category')['Sales'].sum().nlargest(12).index
-        df_top12 = df_filtrado[df_filtrado['Sub-Category'].isin(top12)]
-        vendas_cat_sub = df_top12.groupby(['Sub-Category', 'Category'])['Sales'].sum().unstack()
-        
-        fig10, ax10 = plt.subplots(figsize=(12, 6))
-        vendas_cat_sub.plot(kind='bar', stacked=True, ax=ax10)
-        plt.xticks(rotation=45, ha='right')
-        fig10.tight_layout()
-        st.pyplot(fig10)
-        st.markdown("Análise: Detalhamento do mix de produtos mais relevantes, indicando quais subcategorias sustentam as categorias macro.")
+        # Exportação dos dados filtrados
+        csv = df_filtrado.to_csv(index=False).encode('utf-8')
+        st.download_button(label="📥 Baixar Dados Filtrados (CSV)", data=csv, file_name='dados_filtrados.csv', mime='text/csv')
