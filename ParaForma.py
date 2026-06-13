@@ -50,3 +50,33 @@ def carregar_dados():
     return df
 
 df = carregar_dados()
+
+# Painel lateral de filtros
+st.sidebar.header("🔍 Filtros")
+
+anos = sorted(df['Year'].unique().tolist())
+ano_escolhido = st.sidebar.multiselect("Selecione o(s) Ano(s)", anos, default=anos)
+
+lista_regioes = df['Region'].unique().tolist() if 'Region' in df.columns else df['State'].unique().tolist()
+regiao_escolhida = st.sidebar.multiselect("Selecione a Região/Estado", lista_regioes, default=lista_regioes)
+
+lista_segmentos = df['Segment'].unique().tolist()
+segmento_escolhido = st.sidebar.multiselect("Selecione o(s) Segmento(s)", lista_segmentos, default=lista_segmentos)
+
+# Aplicação dos filtros no dataframe
+df_filtrado = df[df['Year'].isin(ano_escolhido) & df['Segment'].isin(segmento_escolhido)]
+if 'Region' in df.columns:
+    df_filtrado = df_filtrado[df_filtrado['Region'].isin(regiao_escolhida)]
+else:
+    df_filtrado = df_filtrado[df_filtrado['State'].isin(regiao_escolhida)]
+
+# Interface principal
+st.title("Streamlit-Indios 📊")
+st.markdown("Dashboard operacional de análise de vendas.")
+
+aba1, aba2, aba3, aba4 = st.tabs([
+    "🏠 Visão Geral", 
+    "📈 Perguntas 1-5", 
+    "🚀 Perguntas 6-10", 
+    "💡 Conclusões"
+])
